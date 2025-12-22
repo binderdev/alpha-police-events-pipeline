@@ -13,9 +13,7 @@ from master_sync import sync_master_s3, sync_master_gcs
 
 
 # ArcGIS Feature Layer base URL
-LAYER_URL = "https://alphagis.alpharetta.ga.us/arcgis/rest/services/OpenData/OpenData_PS_Full/FeatureServer/1"
-
-
+LAYER_URL = "https://alphagis.alpharetta.ga.us/arcgis/rest/services/OpenData/OpenData_PS_Full/FeatureServer/0"
 def fetch_all_geojson(where: str = "1=1", batch_size: int = 2000) -> dict:
     features = []
     offset = 0
