@@ -89,13 +89,15 @@ def main():
 
     # 1) Fetch current rolling dataset
     fc = fetch_all_geojson(where="1=1")
-    df_new = add_dedupe_key(flatten(fc))
+    df_new = add_dedupe_key(flatten_geojson(fc))
+
 
     # 2) Write snapshot locally
     suffix = datetime.now().strftime("%Y%m%d")
     snap_name = f"AlphaPoliceEvent_{suffix}.geojson"
     snap_path = work_root / snap_name
     snap_path.write_text(json.dumps(fc), encoding="utf-8")
+
 
     # 3) Upload snapshot to BOTH stores
     snap_key = f"snapshots/{snap_name}"
