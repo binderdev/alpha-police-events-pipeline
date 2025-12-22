@@ -23,13 +23,14 @@ def fetch_all_geojson(where: str = "1=1", batch_size: int = 2000) -> dict:
             "where": where,
             "outFields": "*",
             "outSR": 4326,
-            "f": "geojson",
+            "f": "geojson",                 # <-- force GeoJSON
             "resultOffset": offset,
             "resultRecordCount": batch_size,
         }
         r = requests.get(f"{LAYER_URL}/query", params=params, timeout=60)
         r.raise_for_status()
         data = r.json()
+
         batch = data.get("features", [])
         features.extend(batch)
 
@@ -40,11 +41,11 @@ def fetch_all_geojson(where: str = "1=1", batch_size: int = 2000) -> dict:
     return {"type": "FeatureCollection", "features": features}
 
 
-def flatten(fc: dict) -> pd.DataFrame:
+def flatten_geojson(fc: dict) -> pd.DataFrame:
     rows = []
-    for f in fc.get("features", []):
-        props = f.get("properties") or {}
-        geom = f.get("geometry") or {}
+    for feat in fc.get("features", []):
+        props = feat.get("properties") or {}
+        geom = feat.get("geometry") or {}
         props["_geometry_json"] = json.dumps(geom, sort_keys=True)
         rows.append(props)
     return pd.DataFrame(rows)
